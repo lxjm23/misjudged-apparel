@@ -414,6 +414,7 @@ export async function getCart(
 // This is called from `app/api/revalidate.ts` so providers can control revalidation logic.
 // We always need to respond with a 200 status code to Shopify,
 // otherwise it will continue to retry the request.
+// This is called from `app/api/revalidate.ts` so providers can control revalidation logic.
 export async function revalidate(req: NextRequest): Promise<NextResponse> {
   const topic = req.headers.get("x-shopify-topic") || "unknown";
   const secret = req.nextUrl.searchParams.get("secret");
@@ -426,8 +427,16 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
   let handle: string | null = null;
 
   try {
-    const body = await req.json(); // 👈 parse webhook payload
-    handle = body?.handle || body?.product?.handle || body?.data?.handle || null;
+    const rawBody = await req.text();
+    console.log("📦 Raw webhook body:", rawBody);
+
+    const body = JSON.parse(rawBody);
+    handle =
+      body?.handle ||
+      body?.product?.handle ||
+      body?.data?.handle ||
+      null;
+
     console.log("🔍 Product handle received:", handle);
   } catch (err) {
     console.warn("⚠️ Failed to parse webhook JSON body", err);
@@ -445,22 +454,23 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
   ];
 
   if (collectionWebhooks.includes(topic)) {
-    console.log("🔁 Revalidating collections tag");
+    console.log("🔁 Revalidating TAGS.collections");
     revalidateTag(TAGS.collections);
   }
 
   if (productWebhooks.includes(topic)) {
     if (handle) {
-      console.log(`🔁 Revalidating product path: /product/${handle}`);
-      revalidatePath(`/product/${handle}`); // 👈 this is what fixes your issue
+      console.log(`🔁 Revalidating path: /product/${handle}`);
+      revalidatePath(`/product/${handle}`);
     } else {
-      console.log("🔁 Fallback: revalidating products tag");
+      console.log("🔁 Fallback: Revalidating TAGS.products");
       revalidateTag(TAGS.products);
     }
   }
 
   return NextResponse.json({ status: 200, revalidated: true, now: Date.now() });
 }
+
 
 // export async function getPage(handle: string): Promise<Page> {
 //   const res = await shopifyFetch<ShopifyCartOperation>({
