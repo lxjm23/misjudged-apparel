@@ -201,6 +201,7 @@ export async function getProducts({
 }): Promise<Product[]> {
 	const res = await shopifyFetch<ShopifyProductsOperation>({
 		query: getProductsQuery,
+		cache: "no-store", // 👈 add this line
 		tags: [TAGS.products],
 		variables: {
 			query,
@@ -211,6 +212,7 @@ export async function getProducts({
 
 	return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
 }
+
 
 function reshapeCollection(
 	collection: ShopifyCollection
