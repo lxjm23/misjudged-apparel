@@ -43,7 +43,7 @@ import {
 	ShopifyRemoveFromCartOperation,
 	ShopifyUpdateCartOperation,
 } from "./types";
-import { headers } from "next/headers";
+
 import { revalidateTag } from "next/cache";
 
 const rawDomain = process.env.SHOPIFY_STORE_DOMAIN || "";
@@ -426,7 +426,7 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
     "products/delete",
     "products/update",
   ];
-  const topic = req.headers.get("x-shopify-topic") || "unknown";
+	const topic = req.headers.get("x-shopify-topic") || "unknown";
   const secret = req.nextUrl.searchParams.get("secret");
   const isCollectionUpdate = collectionWebhooks.includes(topic);
   const isProductUpdate = productWebhooks.includes(topic);
