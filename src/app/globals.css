@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
+
+/* now safe to define custom vars */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-sans: 'Montserrat', sans-serif;
+  --font-serif: 'Judson', serif;
 }
 
 @theme inline {
