@@ -428,63 +428,64 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 
   try {
     const rawBody = await req.text();
-    console.log("📦 Raw webhook body:", rawBody);
-
     const body = JSON.parse(rawBody);
     handle =
       body?.handle ||
       body?.product?.handle ||
+      body?.collection?.handle ||
       body?.data?.handle ||
       null;
 
-    console.log("🔍 Product handle received:", handle);
+    console.log("📦 Webhook topic:", topic);
+    console.log("🔍 Handle parsed from webhook:", handle);
   } catch (err) {
     console.warn("⚠️ Failed to parse webhook JSON body", err);
   }
 
-  const collectionWebhooks = [
-    "collections/create",
-    "collections/delete",
-    "collections/update",
-  ];
   const productWebhooks = [
     "products/create",
-    "products/delete",
     "products/update",
+    "products/delete",
+  ];
+  const collectionWebhooks = [
+    "collections/create",
+    "collections/update",
+    "collections/delete",
   ];
 
-	// ✅ <--- PUT THIS BLOCK RIGHT HERE
   if (productWebhooks.includes(topic)) {
     if (handle) {
       console.log(`🔁 Revalidating: /product/${handle}`);
       revalidatePath(`/product/${handle}`);
-
-      console.log("🔁 Revalidating: /search");
-      revalidatePath(`/search`);
-      revalidateTag(TAGS.products); // optional but good
-    } else {
-      revalidatePath(`/search`);
-      revalidateTag(TAGS.products);
     }
+
+    console.log("🔁 Revalidating: /search (all products)");
+    revalidatePath(`/search`);
+    revalidateTag(TAGS.products);
+
+    // Optional: homepage includes featured products
+    revalidatePath(`/`);
   }
-	
+
   if (collectionWebhooks.includes(topic)) {
-    console.log("🔁 Revalidating TAGS.collections");
+    console.log("🔁 Revalidating collections");
     revalidateTag(TAGS.collections);
-  }
 
-  if (productWebhooks.includes(topic)) {
+    console.log("🔁 Revalidating: /search");
+    revalidatePath(`/search`);
+
     if (handle) {
-      console.log(`🔁 Revalidating path: /product/${handle}`);
-      revalidatePath(`/product/${handle}`);
-    } else {
-      console.log("🔁 Fallback: Revalidating TAGS.products");
-      revalidateTag(TAGS.products);
+      console.log(`🔁 Revalidating collection page: /search/${handle}`);
+      revalidatePath(`/search/${handle}`);
     }
+
+    // Optional: homepage includes featured collections
+    revalidatePath(`/`);
   }
 
   return NextResponse.json({ status: 200, revalidated: true, now: Date.now() });
 }
+
 
 
 // export async function getPage(handle: string): Promise<Page> {
