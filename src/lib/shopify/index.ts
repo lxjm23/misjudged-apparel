@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import {
 	HIDDEN_PRODUCT_TAG,
 	SHOPIFY_GRAPHQL_API_ENDPOINT,
-	TAGS,
 } from "../constant";
 import { isShopifyError } from "../type-guards";
 import { ensureStartWith } from "../utils";
@@ -45,6 +44,7 @@ import {
 } from "./types";
 import { headers } from "next/headers";
 import { revalidateTag } from "next/cache";
+import { TAGS } from "../constant";
 
 const rawDomain = process.env.SHOPIFY_STORE_DOMAIN || "";
 const domain = ensureStartWith(
