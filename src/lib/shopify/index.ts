@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
 	HIDDEN_PRODUCT_TAG,
 	SHOPIFY_GRAPHQL_API_ENDPOINT,
+	TAGS,
 } from "../constant";
 import { isShopifyError } from "../type-guards";
 import { ensureStartWith } from "../utils";
@@ -44,7 +45,6 @@ import {
 } from "./types";
 import { headers } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { TAGS } from "../constant";
 
 const rawDomain = process.env.SHOPIFY_STORE_DOMAIN || "";
 const domain = ensureStartWith(
@@ -426,7 +426,7 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
     "products/delete",
     "products/update",
   ];
-  const topic = (await headers()).get("x-shopify-topic") || "unknown";
+  const topic = req.headers.get("x-shopify-topic") || "unknown";
   const secret = req.nextUrl.searchParams.get("secret");
   const isCollectionUpdate = collectionWebhooks.includes(topic);
   const isProductUpdate = productWebhooks.includes(topic);
