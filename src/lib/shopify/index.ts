@@ -453,6 +453,21 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
     "products/update",
   ];
 
+	// ✅ <--- PUT THIS BLOCK RIGHT HERE
+  if (productWebhooks.includes(topic)) {
+    if (handle) {
+      console.log(`🔁 Revalidating: /product/${handle}`);
+      revalidatePath(`/product/${handle}`);
+
+      console.log("🔁 Revalidating: /search");
+      revalidatePath(`/search`);
+      revalidateTag(TAGS.products); // optional but good
+    } else {
+      revalidatePath(`/search`);
+      revalidateTag(TAGS.products);
+    }
+  }
+	
   if (collectionWebhooks.includes(topic)) {
     console.log("🔁 Revalidating TAGS.collections");
     revalidateTag(TAGS.collections);
