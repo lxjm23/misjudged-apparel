@@ -44,7 +44,7 @@ import {
 	ShopifyUpdateCartOperation,
 } from "./types";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 const rawDomain = process.env.SHOPIFY_STORE_DOMAIN || "";
 const domain = ensureStartWith(
@@ -412,9 +412,26 @@ export async function getCart(
 }
 
 // This is called from `app/api/revalidate.ts` so providers can control revalidation logic.
+// We always need to respond with a 200 status code to Shopify,
+// otherwise it will continue to retry the request.
 export async function revalidate(req: NextRequest): Promise<NextResponse> {
-  // We always need to respond with a 200 status code to Shopify,
-  // otherwise it will continue to retry the request.
+  const topic = req.headers.get("x-shopify-topic") || "unknown";
+  const secret = req.nextUrl.searchParams.get("secret");
+
+  if (!secret || secret !== process.env.SHOPIFY_REVALIDATION_SECRET) {
+    console.error("❌ Invalid revalidation secret.");
+    return NextResponse.json({ status: 200 });
+  }
+
+  let handle: string | null = null;
+
+  try {
+    const body = await req.json(); // 👈 parse webhook payload
+    handle = body?.handle || body?.product?.handle || body?.data?.handle || null;
+    console.log("🔍 Product handle received:", handle);
+  } catch (err) {
+    console.warn("⚠️ Failed to parse webhook JSON body", err);
+  }
 
   const collectionWebhooks = [
     "collections/create",
@@ -426,27 +443,20 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
     "products/delete",
     "products/update",
   ];
-	const topic = req.headers.get("x-shopify-topic") || "unknown";
-  const secret = req.nextUrl.searchParams.get("secret");
-  const isCollectionUpdate = collectionWebhooks.includes(topic);
-  const isProductUpdate = productWebhooks.includes(topic);
 
-  if (!secret || secret !== process.env.SHOPIFY_REVALIDATION_SECRET) {
-    console.error("Invalid revalidation secret.");
-    return NextResponse.json({ status: 200 });
-  }
-
-  if (!isCollectionUpdate && !isProductUpdate) {
-    // We don't need to revalidate anything for any other topics.
-    return NextResponse.json({ status: 200 });
-  }
-
-  if (isCollectionUpdate) {
+  if (collectionWebhooks.includes(topic)) {
+    console.log("🔁 Revalidating collections tag");
     revalidateTag(TAGS.collections);
   }
 
-  if (isProductUpdate) {
-    revalidateTag(TAGS.products);
+  if (productWebhooks.includes(topic)) {
+    if (handle) {
+      console.log(`🔁 Revalidating product path: /product/${handle}`);
+      revalidatePath(`/product/${handle}`); // 👈 this is what fixes your issue
+    } else {
+      console.log("🔁 Fallback: revalidating products tag");
+      revalidateTag(TAGS.products);
+    }
   }
 
   return NextResponse.json({ status: 200, revalidated: true, now: Date.now() });
