@@ -1,21 +1,48 @@
-import clsx from "clsx";
-import { FunctionComponent } from "react";
 
-interface TextProps {
-  html: string;
-  className?: string;
-}
+  import clsx from "clsx";
+  import { FunctionComponent, JSX } from "react";
+  import parse, { DOMNode, domToReact, Element } from "html-react-parser";
 
-const Prose: FunctionComponent<TextProps> = ({ html, className }) => {
-  return (
-    <div
-      className={clsx(
-        "prose mx-auto max-w-6xl text-base leading-7 text-black prose-headings:mt-8 prose-headings:font-semibold prose-headings:tracking-wide prose-headings:text-black prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-h4:text-2xl prose-h5:text-xl prose-h6:text-lg prose-a:text-black prose-a:underline hover:prose-a:text-neutral-300 prose-strong:text-black prose-ol:mt-8 prose-ol:list-decimal prose-ol:pl-6 prose-ul:mt-8 prose-ul:list-disc prose-ul:pl-6 ",
-        className
-      )}
-      dangerouslySetInnerHTML={{ __html: html as string }}
-    />
-  );
-};
+  interface TextProps {
+    html: string;
+    className?: string;
+  }
 
-export default Prose;
+  const Prose: FunctionComponent<TextProps> = ({ html, className }) => {
+    const parsedContent = parse(html, {
+      replace: (domNode: DOMNode) => {
+        if (
+          domNode.type === "tag" &&
+          ["h1", "h2", "h3", "h4", "h5", "h6"].includes(domNode.name)
+        ) {
+          const level = domNode.name;
+          const Tag = level as keyof JSX.IntrinsicElements;
+  
+          const headingStyles: Record<string, string> = {
+            h1: "text-3xl font- leading-normal tracking-[2.25px]",
+            h2: " text-2xl font-normal leading-normal tracking-[1.8px]",
+            h3: "text-1xl mt-6 font-semibold",
+            h4: "text-2xl mt-6 font-semibold",
+            h5: "text-xl mt-4 font-semibold",
+            h6: "text-lg mt-4 font-semibold",
+          };
+  
+          return (
+            <Tag className={headingStyles[level]}>
+              {domToReact((domNode as Element).children as unknown as DOMNode[])}
+            </Tag>
+          );
+        }
+  
+        return undefined;
+      },
+    });
+  
+    return (
+      <div className={clsx("prose font-serif max-w-6xl mx-auto", className)}>
+        {parsedContent}
+      </div>
+    );
+  };
+  
+  export default Prose;
