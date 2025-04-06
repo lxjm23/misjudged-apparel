@@ -16,7 +16,7 @@ export default function LockedPage() {
     <main className="flex flex-col items-center justify-center h-screen font-serif">
       <Image
      
-  src="/misjudged3dLogo.gif" // public/logo-lock.png
+  src="/public/misjudged3dLogo.gif" // public/logo-lock.png
   alt="Locked Store"
   width={250}
   height={120}
