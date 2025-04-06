@@ -16,7 +16,7 @@ export default function LockedPage() {
     <main className="flex flex-col items-center justify-center h-screen font-serif">
       <Image
      
-  src="public/misjudged3dLogo.gif" // public/logo-lock.png
+  src="/misjudged3dLogo.gif" // public/logo-lock.png
   alt="Locked Store"
   width={250}
   height={120}
@@ -28,6 +28,7 @@ export default function LockedPage() {
         onChange={(e) => setInput(e.target.value)}
         placeholder="Enter password"
       />
+
       <button onClick={submit} className="mt-2 bg-black text-white px-4 py-1">
         Unlock
       </button>
