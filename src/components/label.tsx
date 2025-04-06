@@ -11,14 +11,14 @@ export default function Label({title, amount, currencyCode, position = "bottom"}
   return (
     <div
       className={clsx(
-        "flex w-full px-4 pt-2 justify-center mb-4",
+         "flex w-full px-4 justify-start",
         {
-          "lg:px-20 lg:pt-[35%]": position === "center",
+          "lg:px-20": position === "center", 
         }
       )}
     >
-      <div className="flex flex-col  p-1 text-xs font-serif  text-black backdrop-blur-md wid">
-      <h3 className="mr-4 line-clamp-2 flex-grow  text-2xl font-bold tracking-[1.2px] text-white font-serif">
+      <div className="flex flex-col text-xs font-serif  text-black w-full">
+      <h3 className="mr-4 line-clamp-2 flex-grow text-sm sm:text-base md:text-lg lg:text-1xl font-bold tracking-[1.2px] text-white font-serif">
   {title}
 </h3>
         <Price

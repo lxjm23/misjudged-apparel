@@ -21,7 +21,7 @@ export function GridTileImage({
   return (
     <div
       className={clsx(
-        "group flex flex-col h-full w-full items-center justify-center overflow-hidden border bg-[#4D4D4D] hover:border-neutral-600 ",
+        "group flex flex-col h-full w-full  overflow-hidden border bg-[#4D4D4D] hover:border-neutral-600 ",
         {
           relative: label,
           "border-2 border-neutral-600": active,
@@ -31,9 +31,9 @@ export function GridTileImage({
     >
       
       {props.src ? (
-        <div className="w-full aspect-square relative">
+        <div className="relative w-full flex-grow-0 flex-shrink-0 basis-[70%]">
         <Image
-          className={clsx("relative h-full w-full object-contain", {
+          className={clsx("h-full w-full object-contain", {
             "transition duration-300 ease-in-out group-hover:scale-105":
               isInteractive,
           })}
@@ -42,7 +42,7 @@ export function GridTileImage({
         </div>
       ) : null}
       {label ? (
-        <div className="flex-1 flex items-end justify-center">
+        <div className="w-full flex-grow-0 flex-shrink-0 basis-[30%] flex items-start justify-start">
         <Label
           title={label.title}
           amount={label.amount}
