@@ -2,7 +2,7 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useCart } from "./cart-context";
 import { createUrl } from "@/lib/utils";
 import Image from "next/image";
@@ -25,7 +25,6 @@ type MerchandiseSearchParams = {
 export default function CartModal() {
   const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
-  const quantityRef = useRef(cart?.totalQuantity);
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
 
@@ -35,19 +34,7 @@ export default function CartModal() {
     }
   }, [cart]);
 
-  useEffect(() => {
-    if (
-      cart?.totalQuantity &&
-      cart?.totalQuantity !== quantityRef.current &&
-      cart?.totalQuantity > 0
-    ) {
-      if (!isOpen) {
-        setIsOpen(true);
-      }
 
-      quantityRef.current = cart?.totalQuantity;
-    }
-  }, [isOpen, cart?.totalQuantity, quantityRef]);
 
   return (
     <>
@@ -218,12 +205,11 @@ export default function CartModal() {
     const result = await redirectToCheckout();
     if (typeof result === "string") {
       console.error("Checkout error:", result);
-      // Optional: show toast or alert
     }
   }}
 >
-                    <CheckoutButton />
-                  </form>
+  <CheckoutButton />
+</form>
                 </div>
               )}
             </Dialog.Panel>

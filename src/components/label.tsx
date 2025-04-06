@@ -11,18 +11,18 @@ export default function Label({title, amount, currencyCode, position = "bottom"}
   return (
     <div
       className={clsx(
-        "absolute bottom-0 left-0 flex w-full px-4 pb-4 srccontainer/label",
+        "flex w-full px-4 pt-2 justify-center mb-4",
         {
-          "lg:px-20 lg:pb-[35%]": position === "center",
+          "lg:px-20 lg:pt-[35%]": position === "center",
         }
       )}
     >
-      <div className="flex items-center rounded-full border bg-white/70 p-1 text-xs font-semibold text-black backdrop-blur-md dark:border-neutral-800 dark:bg-black/70 dark:text-white">
-        <h3 className="mr-4 line-clamp-2 flex-grow pl-2 leading-none tracking-tight">
-          {title}
-        </h3>
+      <div className="flex flex-col  p-1 text-xs font-serif  text-black backdrop-blur-md wid">
+      <h3 className="mr-4 line-clamp-2 flex-grow  text-2xl font-bold tracking-[1.2px] text-white font-serif">
+  {title}
+</h3>
         <Price
-          className="flex-none rounded-full bg-blue-600 p-2 text-white"
+          className="flex-none rounded-full  text-white"
           amount={amount}
           currencyCode={currencyCode}
           currencyCodeClassName="hidden src[275px]/label:inline"

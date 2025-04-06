@@ -173,6 +173,7 @@ export type ShopifyCart = {
 
 export type ShopifyCartOperation = {
   data: {
+		pageByHandle: Page | PromiseLike<Page>;
     cart: ShopifyCart;
   };
   variables: {

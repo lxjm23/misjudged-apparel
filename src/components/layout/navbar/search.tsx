@@ -25,7 +25,7 @@ export default function Search() {
   return (
     <form
       onSubmit={onSubmit}
-      className="relative w-1/2 lg:w-80 xl:w-full"
+      className="relative w-full sm:w-full lg:w-80 xl:w-full"
     >
       <input
         key={searchParams?.get("q")}
@@ -37,7 +37,7 @@ export default function Search() {
         className="text-md w-full rounded-lg border bg-white px-4 py-2 text-black placeholder:text-neutral-500 md:text-sm "
       />
       <div className="absolute right-0 top-0 mr-3 flex h-full items-center">
-        <MagnifyingGlassIcon className="h-4" />
+        <MagnifyingGlassIcon className="h-4 text-black" />
       </div>
     </form>
   );

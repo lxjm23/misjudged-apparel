@@ -16,7 +16,10 @@ function SubmitButton({
   availableForSale: boolean;
   selectedVariantId: string | undefined;
 }){
-  const buttonClasses = "relative flex w-full = items-center justify-center rounded-full bg-blue-6-- p-4 tracking-wide text-white";
+  const buttonClasses =
+  "relative flex w-full items-center justify-center rounded bg-[#D9D9D9] border border-black p-4 tracking-wide text-black active:bg-[#999999]";
+
+
   const disabledClasses = "cursor-not-allowed opacity-60 hover:opacity-60";
 
   if(!availableForSale){

@@ -14,7 +14,7 @@ export async function Navbar() {
   const menu = await getMenu("misjudged-navbar-menu");
   console.log("menu:", menu);
   return (
-    <nav className="bg-[#A9A7A7] sticky top-0 z-[999] backdrop-blur-sm p-4 lg:px-6">
+    <nav className="bg-[#A9A7A7] sticky top-0 z-[9] backdrop-blur-sm p-4 lg:px-6">
     {/* Mobile + Tablet Layout (default) */}
     <div className="flex items-center justify-between w-full lg:hidden">
       {/* Left: Hamburger */}
@@ -31,8 +31,8 @@ export async function Navbar() {
 
       {/* Right: Cart */}
       <div className="flex-none">
-        {/* <CartModal /> */}
-        <span className="text-sm">CART</span>
+        <CartModal />
+      
       </div>
     </div>
 

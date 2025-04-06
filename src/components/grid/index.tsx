@@ -11,7 +11,7 @@ export default function Grid(props: React.ComponentProps<"ul">){
 
 function GridItem(props: React.ComponentProps<"li">){
   return(
-    <li {...props} className={clsx("aspect-square transition-opacity", props.className)}
+    <li {...props} className={clsx("aspect-[4/5] transition-opacity", props.className)}
     >
       {props.children}
     </li>
