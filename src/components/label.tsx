@@ -18,7 +18,7 @@ export default function Label({title, amount, currencyCode, position = "bottom"}
       )}
     >
       <div className="flex flex-col text-xs font-serif  text-black w-full">
-      <h3 className="mr-4 line-clamp-2 flex-grow text-sm sm:text-base md:text-lg lg:text-1xl font-bold tracking-[1.2px] text-white font-serif">
+      <h3 className="mr-4 line-clamp-2 flex-grow text-[clamp(0.875rem,2vw,1.25rem)] font-bold tracking-[1.2px] text-white font-serif">
   {title}
 </h3>
         <Price

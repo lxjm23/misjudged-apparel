@@ -13,5 +13,7 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|locked|api|favicon.ico).*)"], // protect all except /locked & static
+  matcher: [
+    "/((?!_next|static|locked|api|favicon.ico|.*\\.ico|.*\\.gif|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg).*)",
+  ], // protect all except /locked & static
 };

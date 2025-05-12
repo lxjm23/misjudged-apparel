@@ -7,7 +7,7 @@ import { AddToCart } from "../cart/add-to-cart";
 export function ProductDescription({product} : {product: Product}){
   return(
     <>
-      <div className="mb-6 flex flex-col border-b pb-6">
+      <div className="mb-4 flex flex-col border-b border-black pb-2">
         <h1 className="mb-2 text-3xl font-medium">{product.title}</h1>
         <div className=" rounded-full">
           <Price amount={product.priceRange.maxVariantPrice.amount} currencyCode={product.priceRange.maxVariantPrice.currencyCode} />
